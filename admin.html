@@ -108,7 +108,6 @@
                     </div>
                 </div>
 
-                <!-- NUEVOS CAMPOS INMOBILIARIOS -->
                 <div style="display: flex; gap: 1rem;">
                     <div class="form-group" style="flex: 1;">
                         <label>🛏️ Habitaciones</label>
@@ -180,12 +179,16 @@
                 <div style="display: flex; gap: 1rem;">
                     <div class="form-group" style="flex: 1;">
                         <label>Color Principal</label>
-                        <input type="color" id="cfg-primary" value="#0047AB">
+                        <input type="color" id="cfg-primary" value="#ff0000">
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label>Color Secundario</label>
                         <input type="color" id="cfg-secondary" value="#2c3e50">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>Color de Fondo</label>
+                    <input type="color" id="cfg-background" value="#f8f9fa">
                 </div>
                 <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #eee;">
                 <h3 style="margin-bottom: 1rem;">Información de Contacto</h3>
@@ -259,8 +262,12 @@
                     const data = doc.data();
                     document.getElementById('cfg-name').value = data.restaurantName || '';
                     document.getElementById('cfg-tagline').value = data.tagline || '';
-                    document.getElementById('cfg-primary').value = data.primaryColor || '#0047AB';
+                    document.getElementById('cfg-primary').value = data.primaryColor || '#ff0000';
                     document.getElementById('cfg-secondary').value = data.secondaryColor || '#2c3e50';
+                    
+                    // CORREGIDO: Ahora sí carga el color de fondo
+                    document.getElementById('cfg-background').value = data.backgroundColor || '#f8f9fa';
+                    
                     document.getElementById('cfg-address').value = data.address || '';
                     document.getElementById('cfg-hours').value = data.hours || '';
                     document.getElementById('cfg-phone').value = data.phone || '';
@@ -320,6 +327,10 @@
                     tagline: document.getElementById('cfg-tagline').value,
                     primaryColor: document.getElementById('cfg-primary').value,
                     secondaryColor: document.getElementById('cfg-secondary').value,
+                    
+                    // CORREGIDO: Ahora sí se guarda el color de fondo
+                    backgroundColor: document.getElementById('cfg-background').value,
+                    
                     address: document.getElementById('cfg-address').value,
                     hours: document.getElementById('cfg-hours').value,
                     phone: document.getElementById('cfg-phone').value,
@@ -413,7 +424,6 @@
             const category = document.getElementById('prod-category').value;
             const status = document.getElementById('prod-status').value;
             
-            // Nuevos campos
             const bedrooms = document.getElementById('prod-bedrooms').value;
             const bathrooms = document.getElementById('prod-bathrooms').value;
             const sqmeters = document.getElementById('prod-sqmeters').value;
@@ -444,7 +454,7 @@
                     bedrooms,
                     bathrooms,
                     sqmeters,
-                    available: status === 'Disponible', // Mantenemos esto para compatibilidad de filtros
+                    available: status === 'Disponible',
                     image: imageUrl, 
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
