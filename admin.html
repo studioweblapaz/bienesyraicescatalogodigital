@@ -108,6 +108,17 @@
                     </div>
                 </div>
 
+                <!-- NUEVO: Campo de Operación (Venta / Renta) -->
+                <div style="display: flex; gap: 1rem; margin-top: -0.5rem; margin-bottom: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>💼 Operación</label>
+                        <select id="prod-operation">
+                            <option value="Venta">Venta</option>
+                            <option value="Renta">Renta</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div style="display: flex; gap: 1rem;">
                     <div class="form-group" style="flex: 1;">
                         <label>🛏️ Habitaciones</label>
@@ -264,10 +275,7 @@
                     document.getElementById('cfg-tagline').value = data.tagline || '';
                     document.getElementById('cfg-primary').value = data.primaryColor || '#ff0000';
                     document.getElementById('cfg-secondary').value = data.secondaryColor || '#2c3e50';
-                    
-                    // CORREGIDO: Ahora sí carga el color de fondo
                     document.getElementById('cfg-background').value = data.backgroundColor || '#f8f9fa';
-                    
                     document.getElementById('cfg-address').value = data.address || '';
                     document.getElementById('cfg-hours').value = data.hours || '';
                     document.getElementById('cfg-phone').value = data.phone || '';
@@ -327,10 +335,7 @@
                     tagline: document.getElementById('cfg-tagline').value,
                     primaryColor: document.getElementById('cfg-primary').value,
                     secondaryColor: document.getElementById('cfg-secondary').value,
-                    
-                    // CORREGIDO: Ahora sí se guarda el color de fondo
                     backgroundColor: document.getElementById('cfg-background').value,
-                    
                     address: document.getElementById('cfg-address').value,
                     hours: document.getElementById('cfg-hours').value,
                     phone: document.getElementById('cfg-phone').value,
@@ -376,13 +381,18 @@
                 if (p.status === 'Reservado') statusColor = '#f39c12'; // Naranja
                 if (p.status === 'Vendido') statusColor = '#95a5a6'; // Gris
 
+                // NUEVO: Badge visual para saber si es Venta o Renta en la lista
+                const operationBadge = p.operation === 'Renta' 
+                    ? '<span style="background: #25d366; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 5px;">RENTA</span>' 
+                    : '<span style="background: #0047AB; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 5px;">VENTA</span>';
+
                 const div = document.createElement('div');
                 div.className = 'product-card';
                 div.innerHTML = `
                     <img src="${p.image || 'https://via.placeholder.com/70?text=Foto'}" class="product-img" onerror="this.src='https://via.placeholder.com/70?text=Error'">
                     <div class="product-info">
                         <div class="product-name">${p.name}</div>
-                        <div class="product-category">${p.category || 'Sin tipo'}</div>
+                        <div class="product-category">${p.category || 'Sin tipo'} ${operationBadge}</div>
                         <div class="product-features">
                             <span>🛏️ ${p.bedrooms || '-'}</span>
                             <span>🚿 ${p.bathrooms || '-'}</span>
@@ -422,8 +432,11 @@
             const detailedDesc = document.getElementById('prod-detailed-desc').value;
             const price = parseFloat(document.getElementById('prod-price').value);
             const category = document.getElementById('prod-category').value;
-            const status = document.getElementById('prod-status').value;
             
+            // NUEVO: Capturar el valor de la operación
+            const operation = document.getElementById('prod-operation').value; 
+            
+            const status = document.getElementById('prod-status').value;
             const bedrooms = document.getElementById('prod-bedrooms').value;
             const bathrooms = document.getElementById('prod-bathrooms').value;
             const sqmeters = document.getElementById('prod-sqmeters').value;
@@ -450,6 +463,7 @@
                     detailedDescription: detailedDesc,
                     price, 
                     category, 
+                    operation, // NUEVO: Guardar la operación en Firebase
                     status,
                     bedrooms,
                     bathrooms,
@@ -486,6 +500,10 @@
             document.getElementById('prod-detailed-desc').value = p.detailedDescription || '';
             document.getElementById('prod-price').value = p.price;
             document.getElementById('prod-category').value = p.category || 'Casa';
+            
+            // NUEVO: Cargar el valor de la operación al editar
+            document.getElementById('prod-operation').value = p.operation || 'Venta'; 
+            
             document.getElementById('prod-status').value = p.status || 'Disponible';
             document.getElementById('prod-bedrooms').value = p.bedrooms || '';
             document.getElementById('prod-bathrooms').value = p.bathrooms || '';
@@ -508,6 +526,10 @@
             document.getElementById('prod-detailed-desc').value = '';
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-category').value = 'Casa';
+            
+            // NUEVO: Resetear el valor de la operación al cancelar
+            document.getElementById('prod-operation').value = 'Venta'; 
+            
             document.getElementById('prod-status').value = 'Disponible';
             document.getElementById('prod-bedrooms').value = '';
             document.getElementById('prod-bathrooms').value = '';
