@@ -44,13 +44,10 @@
     <link rel="manifest" href="manifest-admin.json">
     <meta name="theme-color" content="#2c3e50">
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
-        }
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
     </script>
 </head>
 <body>
-    <!-- PANTALLA DE LOGIN -->
     <div class="login-screen" id="login-screen">
         <div class="login-box">
             <h2>🔐 Panel Inmobiliario</h2>
@@ -60,7 +57,6 @@
         </div>
     </div>
 
-    <!-- PANEL PRINCIPAL -->
     <div id="admin-panel" class="hidden">
         <div class="header">
             <h1>🏠 Gestión de Propiedades</h1>
@@ -70,7 +66,6 @@
             </div>
         </div>
 
-        <!-- TAB PROPIEDADES -->
         <div id="tab-propiedades" class="tab-content active">
             <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; max-width: 800px; margin-left: auto; margin-right: auto;">
                 <h3 style="margin-bottom: 1rem;">Agregar / Editar Propiedad</h3>
@@ -78,23 +73,21 @@
                 
                 <div class="form-group">
                     <label>Título de la propiedad</label>
-                    <input type="text" id="prod-name" placeholder="Ej: Casa moderna con jardín en el Centro">
+                    <input type="text" id="prod-name" placeholder="Ej: Casa moderna con jardín">
                 </div>
-                
                 <div class="form-group">
                     <label>Ubicación / Resumen corto</label>
-                    <textarea id="prod-desc" rows="2" placeholder="Ej: Col. Roma Norte, CDMX. Cerca de parques y transporte."></textarea>
+                    <textarea id="prod-desc" rows="2" placeholder="Ej: Col. Roma Norte, CDMX."></textarea>
                 </div>
-                
                 <div class="form-group">
-                    <label>Descripción Detallada (para la ventana emergente)</label>
-                    <textarea id="prod-detailed-desc" rows="4" placeholder="Ej: Amplia sala, cocina integral equipada, 2 lugares de estacionamiento, seguridad 24/7..."></textarea>
+                    <label>Descripción Detallada</label>
+                    <textarea id="prod-detailed-desc" rows="4" placeholder="Ej: Amplia sala, cocina integral..."></textarea>
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
                     <div class="form-group" style="flex: 1;">
                         <label>💰 Precio (MXN)</label>
-                        <input type="number" id="prod-price" placeholder="Ej: 3500000">
+                        <input type="number" id="prod-price" placeholder="3500000">
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label>🏷️ Tipo de Propiedad</label>
@@ -108,7 +101,6 @@
                     </div>
                 </div>
 
-                <!-- NUEVO: Campo de Operación (Venta / Renta) -->
                 <div style="display: flex; gap: 1rem; margin-top: -0.5rem; margin-bottom: 1rem;">
                     <div class="form-group" style="flex: 1;">
                         <label>💼 Operación</label>
@@ -120,23 +112,14 @@
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
-                    <div class="form-group" style="flex: 1;">
-                        <label>🛏️ Habitaciones</label>
-                        <input type="number" id="prod-bedrooms" placeholder="Ej: 3">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>🚿 Baños</label>
-                        <input type="number" id="prod-bathrooms" placeholder="Ej: 2">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>📏 m² (Metros)</label>
-                        <input type="number" id="prod-sqmeters" placeholder="Ej: 150">
-                    </div>
+                    <div class="form-group" style="flex: 1;"><label>🛏️ Habitaciones</label><input type="number" id="prod-bedrooms" placeholder="3"></div>
+                    <div class="form-group" style="flex: 1;"><label>🚿 Baños</label><input type="number" id="prod-bathrooms" placeholder="2"></div>
+                    <div class="form-group" style="flex: 1;"><label>📏 m²</label><input type="number" id="prod-sqmeters" placeholder="150"></div>
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
                     <div class="form-group" style="flex: 1;">
-                        <label>Estado de la propiedad</label>
+                        <label>Estado</label>
                         <select id="prod-status">
                             <option value="Disponible">Disponible</option>
                             <option value="Reservado">Reservado</option>
@@ -144,14 +127,21 @@
                         </select>
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label>📸 Foto principal</label>
+                        <label>📸 Foto Principal (Portada)</label>
                         <input type="file" id="prod-image-file" accept="image/*">
                         <input type="hidden" id="prod-image-url">
                     </div>
                 </div>
-                
                 <img id="prod-image-preview" style="max-width: 150px; margin-top: 0.5rem; border-radius: 8px; display: none; border: 2px solid #eee;">
 
+                <!-- NUEVO: Campo para Galería Múltiple -->
+                <div class="form-group" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #ccc;">
+                    <label>🖼️ Galería de Fotos Adicionales (Selecciona varias)</label>
+                    <input type="file" id="prod-gallery-files" accept="image/*" multiple>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.3rem;">Al seleccionar nuevas fotos, se reemplazará la galería anterior.</p>
+                    <div id="gallery-preview" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 0.5rem;"></div>
+                </div>
+                
                 <button class="btn-save" id="btn-save-product" onclick="saveProduct()" style="margin-top: 1rem;">Guardar Propiedad</button>
                 <button class="btn-save" id="btn-cancel-edit" onclick="cancelEdit()" style="background: #95a5a6; margin-top: 0.5rem; display: none;">Cancelar Edición</button>
             </div>
@@ -160,72 +150,42 @@
             <div id="products-container" style="max-width: 800px; margin: 0 auto;"></div>
         </div>
 
-        <!-- TAB CONFIGURACIÓN -->
         <div id="tab-config" class="tab-content">
             <div style="background: white; padding: 1.5rem; border-radius: 10px; max-width: 800px; margin: 0 auto;">
                 <h3 style="margin-bottom: 1rem;">Apariencia del Catálogo</h3>
-                
                 <div class="form-group">
-                    <label>📱 Imagen de Portada (Solo se ve en celular)</label>
+                    <label>📱 Imagen de Portada (Solo celular)</label>
                     <input type="file" id="cfg-banner-file" accept="image/*">
                     <img id="cfg-banner-preview" style="max-width: 300px; margin-top: 0.5rem; border-radius: 8px; display: none; background: #eee; padding: 5px;">
                     <input type="hidden" id="cfg-banner-url">
-                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.3rem;">Recomendado: Imagen horizontal 1200x400px</p>
                 </div>
-                
                 <div class="form-group">
-                    <label>🏢 Logo de la Inmobiliaria / Agente</label>
+                    <label>🏢 Logo</label>
                     <input type="file" id="cfg-logo-file" accept="image/*">
                     <img id="cfg-logo-preview" style="max-width: 120px; margin-top: 0.5rem; border-radius: 8px; display: none; background: #eee; padding: 5px;">
                     <input type="hidden" id="cfg-logo-url">
                 </div>
-                <div class="form-group">
-                    <label>Nombre de la Inmobiliaria / Agente</label>
-                    <input type="text" id="cfg-name" placeholder="Ej: Inmobiliaria Premium">
-                </div>
-                <div class="form-group">
-                    <label>Eslogan / Subtítulo</label>
-                    <input type="text" id="cfg-tagline" placeholder="Ej: Encontramos el hogar de tus sueños">
-                </div>
+                <div class="form-group"><label>Nombre</label><input type="text" id="cfg-name" placeholder="Inmobiliaria Premium"></div>
+                <div class="form-group"><label>Eslogan</label><input type="text" id="cfg-tagline" placeholder="Encontramos el hogar de tus sueños"></div>
                 <div style="display: flex; gap: 1rem;">
-                    <div class="form-group" style="flex: 1;">
-                        <label>Color Principal</label>
-                        <input type="color" id="cfg-primary" value="#ff0000">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Color Secundario</label>
-                        <input type="color" id="cfg-secondary" value="#2c3e50">
-                    </div>
+                    <div class="form-group" style="flex: 1;"><label>Color Principal</label><input type="color" id="cfg-primary" value="#ff0000"></div>
+                    <div class="form-group" style="flex: 1;"><label>Color Secundario</label><input type="color" id="cfg-secondary" value="#2c3e50"></div>
                 </div>
-                <div class="form-group">
-                    <label>Color de Fondo</label>
-                    <input type="color" id="cfg-background" value="#f8f9fa">
-                </div>
+                <div class="form-group"><label>Color de Fondo</label><input type="color" id="cfg-background" value="#f8f9fa"></div>
                 <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #eee;">
                 <h3 style="margin-bottom: 1rem;">Información de Contacto</h3>
-                <div class="form-group">
-                    <label>Dirección de la oficina</label>
-                    <input type="text" id="cfg-address" placeholder="Ej: Av. Reforma 222, CDMX">
-                </div>
-                <div class="form-group">
-                    <label>Horario de atención</label>
-                    <input type="text" id="cfg-hours" placeholder="Ej: Lun-Vie: 9:00 - 18:00">
-                </div>
-                <div class="form-group">
-                    <label>Teléfono / WhatsApp del agente</label>
-                    <input type="text" id="cfg-phone" placeholder="Ej: 55 1234 5678">
-                </div>
+                <div class="form-group"><label>Dirección</label><input type="text" id="cfg-address" placeholder="Av. Reforma 222, CDMX"></div>
+                <div class="form-group"><label>Horario</label><input type="text" id="cfg-hours" placeholder="Lun-Vie: 9:00 - 18:00"></div>
+                <div class="form-group"><label>Teléfono / WhatsApp</label><input type="text" id="cfg-phone" placeholder="55 1234 5678"></div>
                 <button class="btn-save" onclick="saveConfig()">💾 Guardar Toda la Configuración</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // ⚙️ 1. CONFIGURACIÓN DE FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAYtVjHyphrkfioEmcNE_9AktnmZ8kRGhE",
             authDomain: "bienesyraices-catalagodigital.firebaseapp.com",
@@ -234,29 +194,21 @@
             messagingSenderId: "55785927218",
             appId: "1:55785927218:web:ed2f6b37275301538fc22b"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ⚙️ 2. CONFIGURACIÓN DE CLOUDINARY
         const CLOUDINARY_CLOUD_NAME = "oxznb5kn";
         const CLOUDINARY_UPLOAD_PRESET = "Bienes y Raíces-Catálogo Digital";
-
-        // ⚙️ 3. CONFIGURACIÓN DEL PROYECTO
         const RESTAURANT_NAME = "Catálogo Digital"; 
         const ADMIN_PASSWORD = "admin123";
-
         let products = [];
 
         function checkPassword() {
             if (document.getElementById('password-input').value === ADMIN_PASSWORD) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-panel').classList.remove('hidden');
-                loadConfig();
-                loadProducts();
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-            }
+                loadConfig(); loadProducts();
+            } else { document.getElementById('error-msg').style.display = 'block'; }
         }
         document.getElementById('password-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
 
@@ -280,84 +232,54 @@
                     document.getElementById('cfg-hours').value = data.hours || '';
                     document.getElementById('cfg-phone').value = data.phone || '';
                     document.getElementById('cfg-logo-url').value = data.logo || '';
-                    if (data.logo) {
-                        document.getElementById('cfg-logo-preview').src = data.logo;
-                        document.getElementById('cfg-logo-preview').style.display = 'block';
-                    }
+                    if (data.logo) { document.getElementById('cfg-logo-preview').src = data.logo; document.getElementById('cfg-logo-preview').style.display = 'block'; }
                     document.getElementById('cfg-banner-url').value = data.mobileBanner || '';
-                    if (data.mobileBanner) {
-                        document.getElementById('cfg-banner-preview').src = data.mobileBanner;
-                        document.getElementById('cfg-banner-preview').style.display = 'block';
-                    }
+                    if (data.mobileBanner) { document.getElementById('cfg-banner-preview').src = data.mobileBanner; document.getElementById('cfg-banner-preview').style.display = 'block'; }
                 }
             });
         }
 
         document.getElementById('cfg-logo-file').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
+            if (e.target.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('cfg-logo-preview').src = e.target.result;
-                    document.getElementById('cfg-logo-preview').style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+                reader.onload = function(ev) { document.getElementById('cfg-logo-preview').src = ev.target.result; document.getElementById('cfg-logo-preview').style.display = 'block'; };
+                reader.readAsDataURL(e.target.files[0]);
             }
         });
-        
         document.getElementById('cfg-banner-file').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
+            if (e.target.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('cfg-banner-preview').src = e.target.result;
-                    document.getElementById('cfg-banner-preview').style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+                reader.onload = function(ev) { document.getElementById('cfg-banner-preview').src = ev.target.result; document.getElementById('cfg-banner-preview').style.display = 'block'; };
+                reader.readAsDataURL(e.target.files[0]);
             }
         });
 
         async function saveConfig() {
-            const btn = event.target;
-            btn.textContent = 'Guardando...';
-            btn.disabled = true;
+            const btn = event.target; btn.textContent = 'Guardando...'; btn.disabled = true;
             const fileInput = document.getElementById('cfg-logo-file');
             const bannerInput = document.getElementById('cfg-banner-file');
             let logoUrl = document.getElementById('cfg-logo-url').value;
             let bannerUrl = document.getElementById('cfg-banner-url').value;
-            
             try {
                 if (fileInput.files.length > 0) logoUrl = await uploadToCloudinary(fileInput.files[0]);
                 if (bannerInput.files.length > 0) bannerUrl = await uploadToCloudinary(bannerInput.files[0]);
-                
                 await db.collection('config').doc('tema').set({
-                    restaurantName: document.getElementById('cfg-name').value,
-                    tagline: document.getElementById('cfg-tagline').value,
-                    primaryColor: document.getElementById('cfg-primary').value,
-                    secondaryColor: document.getElementById('cfg-secondary').value,
-                    backgroundColor: document.getElementById('cfg-background').value,
-                    address: document.getElementById('cfg-address').value,
-                    hours: document.getElementById('cfg-hours').value,
-                    phone: document.getElementById('cfg-phone').value,
-                    logo: logoUrl,
-                    mobileBanner: bannerUrl
+                    restaurantName: document.getElementById('cfg-name').value, tagline: document.getElementById('cfg-tagline').value,
+                    primaryColor: document.getElementById('cfg-primary').value, secondaryColor: document.getElementById('cfg-secondary').value,
+                    backgroundColor: document.getElementById('cfg-background').value, address: document.getElementById('cfg-address').value,
+                    hours: document.getElementById('cfg-hours').value, phone: document.getElementById('cfg-phone').value,
+                    logo: logoUrl, mobileBanner: bannerUrl
                 }, { merge: true });
-                btn.textContent = '💾 Guardar Toda la Configuración';
-                btn.disabled = false;
-                alert('✅ Configuración guardada.');
+                btn.textContent = '💾 Guardar Toda la Configuración'; btn.disabled = false; alert('✅ Configuración guardada.');
             } catch (error) {
-                console.error(error);
-                btn.textContent = '💾 Guardar Toda la Configuración';
-                btn.disabled = false;
-                alert('Error al guardar: ' + error.message);
+                btn.textContent = '💾 Guardar Toda la Configuración'; btn.disabled = false; alert('Error: ' + error.message);
             }
         }
 
         async function uploadToCloudinary(file) {
             const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
             const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+            formData.append("file", file); formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
             const response = await fetch(url, { method: "POST", body: formData });
             const data = await response.json();
             if (data.error) throw new Error(data.error.message);
@@ -374,53 +296,51 @@
 
         function renderProducts() {
             const container = document.getElementById('products-container');
-            container.innerHTML = products.length === 0 ? '<p class="loading">No hay propiedades aún. ¡Agrega la primera!</p>' : '';
-            
+            container.innerHTML = products.length === 0 ? '<p class="loading">No hay propiedades aún.</p>' : '';
             products.forEach(p => {
-                let statusColor = '#25d366'; // Verde (Disponible)
-                if (p.status === 'Reservado') statusColor = '#f39c12'; // Naranja
-                if (p.status === 'Vendido') statusColor = '#95a5a6'; // Gris
-
-                // NUEVO: Badge visual para saber si es Venta o Renta en la lista
+                let statusColor = p.status === 'Reservado' ? '#f39c12' : (p.status === 'Vendido' ? '#95a5a6' : '#25d366');
                 const operationBadge = p.operation === 'Renta' 
                     ? '<span style="background: #25d366; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 5px;">RENTA</span>' 
                     : '<span style="background: #0047AB; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 5px;">VENTA</span>';
 
-                const div = document.createElement('div');
-                div.className = 'product-card';
+                const div = document.createElement('div'); div.className = 'product-card';
                 div.innerHTML = `
                     <img src="${p.image || 'https://via.placeholder.com/70?text=Foto'}" class="product-img" onerror="this.src='https://via.placeholder.com/70?text=Error'">
                     <div class="product-info">
                         <div class="product-name">${p.name}</div>
                         <div class="product-category">${p.category || 'Sin tipo'} ${operationBadge}</div>
-                        <div class="product-features">
-                            <span>🛏️ ${p.bedrooms || '-'}</span>
-                            <span>🚿 ${p.bathrooms || '-'}</span>
-                            <span>📏 ${p.sqmeters || '-'} m²</span>
-                        </div>
+                        <div class="product-features"><span>🛏️ ${p.bedrooms || '-'}</span><span>🚿 ${p.bathrooms || '-'}</span><span>📏 ${p.sqmeters || '-'} m²</span></div>
                         <div class="product-price">$${Number(p.price).toLocaleString('es-MX')}</div>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
                         <span style="background: ${statusColor}; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">${p.status || 'Disponible'}</span>
-                        <div style="display: flex; gap: 5px;">
-                            <button class="btn-edit" onclick="editProduct('${p.id}')">✏️</button>
-                            <button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑️</button>
-                        </div>
-                    </div>
-                `;
+                        <div style="display: flex; gap: 5px;"><button class="btn-edit" onclick="editProduct('${p.id}')">✏️</button><button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑️</button></div>
+                    </div>`;
                 container.appendChild(div);
             });
         }
 
-        document.getElementById('prod-image-file').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
+        // NUEVO: Vista previa de galería múltiple
+        document.getElementById('prod-gallery-files').addEventListener('change', function(e) {
+            const preview = document.getElementById('gallery-preview');
+            preview.innerHTML = '';
+            Array.from(e.target.files).forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('prod-image-preview').src = e.target.result;
-                    document.getElementById('prod-image-preview').style.display = 'block';
+                reader.onload = function(ev) {
+                    const img = document.createElement('img');
+                    img.src = ev.target.result;
+                    img.style.width = '60px'; img.style.height = '60px'; img.style.objectFit = 'cover'; img.style.borderRadius = '4px'; img.style.border = '1px solid #ddd';
+                    preview.appendChild(img);
                 };
                 reader.readAsDataURL(file);
+            });
+        });
+
+        document.getElementById('prod-image-file').addEventListener('change', function(e) {
+            if (e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(ev) { document.getElementById('prod-image-preview').src = ev.target.result; document.getElementById('prod-image-preview').style.display = 'block'; };
+                reader.readAsDataURL(e.target.files[0]);
             }
         });
 
@@ -432,88 +352,81 @@
             const detailedDesc = document.getElementById('prod-detailed-desc').value;
             const price = parseFloat(document.getElementById('prod-price').value);
             const category = document.getElementById('prod-category').value;
-            
-            // NUEVO: Capturar el valor de la operación
-            const operation = document.getElementById('prod-operation').value; 
-            
+            const operation = document.getElementById('prod-operation').value;
             const status = document.getElementById('prod-status').value;
             const bedrooms = document.getElementById('prod-bedrooms').value;
             const bathrooms = document.getElementById('prod-bathrooms').value;
             const sqmeters = document.getElementById('prod-sqmeters').value;
             
             const fileInput = document.getElementById('prod-image-file');
+            const galleryInput = document.getElementById('prod-gallery-files');
             let imageUrl = document.getElementById('prod-image-url').value;
 
             if (!name || !price) { alert('Por favor completa al menos el título y el precio.'); return; }
 
-            btn.textContent = 'Subiendo y Guardando...';
-            btn.disabled = true;
+            btn.textContent = 'Subiendo y Guardando...'; btn.disabled = true;
 
             try {
-                if (fileInput.files.length > 0) {
-                    imageUrl = await uploadToCloudinary(fileInput.files[0]);
-                } else if (!imageUrl) {
-                    imageUrl = 'https://via.placeholder.com/400x300?text=Sin+Imagen';
+                if (fileInput.files.length > 0) imageUrl = await uploadToCloudinary(fileInput.files[0]);
+                else if (!imageUrl) imageUrl = 'https://via.placeholder.com/400x300?text=Sin+Imagen';
+
+                // NUEVO: Subir galería múltiple
+                let galleryUrls = [];
+                if (galleryInput.files.length > 0) {
+                    const uploadPromises = Array.from(galleryInput.files).map(file => uploadToCloudinary(file));
+                    galleryUrls = await Promise.all(uploadPromises);
+                } else if (editId) {
+                    // Si estamos editando y no se seleccionaron nuevas fotos, mantener las anteriores
+                    const existingProduct = products.find(p => p.id === editId);
+                    galleryUrls = existingProduct ? (existingProduct.gallery || []) : [];
                 }
 
                 const productData = {
-                    restaurant: RESTAURANT_NAME, 
-                    name, 
-                    description: desc, 
-                    detailedDescription: detailedDesc,
-                    price, 
-                    category, 
-                    operation, // NUEVO: Guardar la operación en Firebase
-                    status,
-                    bedrooms,
-                    bathrooms,
-                    sqmeters,
-                    available: status === 'Disponible',
-                    image: imageUrl, 
+                    restaurant: RESTAURANT_NAME, name, description: desc, detailedDescription: detailedDesc,
+                    price, category, operation, status, bedrooms, bathrooms, sqmeters,
+                    available: status === 'Disponible', image: imageUrl, gallery: galleryUrls, // NUEVO: Guardar arreglo de galería
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                if (editId) {
-                    await db.collection('productos').doc(editId).update(productData);
-                } else {
+                if (editId) await db.collection('productos').doc(editId).update(productData);
+                else {
                     productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection('productos').add(productData);
                 }
-
-                cancelEdit();
-                alert('✅ Propiedad guardada correctamente.');
+                cancelEdit(); alert('✅ Propiedad guardada correctamente.');
             } catch (error) {
-                console.error(error);
-                alert('Error al guardar: ' + error.message);
+                console.error(error); alert('Error al guardar: ' + error.message);
             }
-
-            btn.textContent = 'Guardar Propiedad';
-            btn.disabled = false;
+            btn.textContent = 'Guardar Propiedad'; btn.disabled = false;
         }
 
         function editProduct(id) {
-            const p = products.find(x => x.id === id);
-            if (!p) return;
+            const p = products.find(x => x.id === id); if (!p) return;
             document.getElementById('edit-product-id').value = p.id;
             document.getElementById('prod-name').value = p.name;
             document.getElementById('prod-desc').value = p.description || '';
             document.getElementById('prod-detailed-desc').value = p.detailedDescription || '';
             document.getElementById('prod-price').value = p.price;
             document.getElementById('prod-category').value = p.category || 'Casa';
-            
-            // NUEVO: Cargar el valor de la operación al editar
-            document.getElementById('prod-operation').value = p.operation || 'Venta'; 
-            
+            document.getElementById('prod-operation').value = p.operation || 'Venta';
             document.getElementById('prod-status').value = p.status || 'Disponible';
             document.getElementById('prod-bedrooms').value = p.bedrooms || '';
             document.getElementById('prod-bathrooms').value = p.bathrooms || '';
             document.getElementById('prod-sqmeters').value = p.sqmeters || '';
             document.getElementById('prod-image-url').value = p.image || '';
+            if (p.image) { document.getElementById('prod-image-preview').src = p.image; document.getElementById('prod-image-preview').style.display = 'block'; }
             
-            if (p.image) {
-                document.getElementById('prod-image-preview').src = p.image;
-                document.getElementById('prod-image-preview').style.display = 'block';
+            // Mostrar miniaturas de la galería existente
+            const galleryPreview = document.getElementById('gallery-preview');
+            galleryPreview.innerHTML = '';
+            if (p.gallery && p.gallery.length > 0) {
+                p.gallery.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url; img.style.width = '60px'; img.style.height = '60px'; img.style.objectFit = 'cover'; img.style.borderRadius = '4px'; img.style.border = '1px solid #ddd';
+                    galleryPreview.appendChild(img);
+                });
             }
+
             document.getElementById('btn-save-product').textContent = 'Actualizar Propiedad';
             document.getElementById('btn-cancel-edit').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -521,52 +434,29 @@
 
         function cancelEdit() {
             document.getElementById('edit-product-id').value = '';
-            document.getElementById('prod-name').value = '';
-            document.getElementById('prod-desc').value = '';
-            document.getElementById('prod-detailed-desc').value = '';
-            document.getElementById('prod-price').value = '';
-            document.getElementById('prod-category').value = 'Casa';
-            
-            // NUEVO: Resetear el valor de la operación al cancelar
-            document.getElementById('prod-operation').value = 'Venta'; 
-            
+            document.getElementById('prod-name').value = ''; document.getElementById('prod-desc').value = '';
+            document.getElementById('prod-detailed-desc').value = ''; document.getElementById('prod-price').value = '';
+            document.getElementById('prod-category').value = 'Casa'; document.getElementById('prod-operation').value = 'Venta';
             document.getElementById('prod-status').value = 'Disponible';
-            document.getElementById('prod-bedrooms').value = '';
-            document.getElementById('prod-bathrooms').value = '';
+            document.getElementById('prod-bedrooms').value = ''; document.getElementById('prod-bathrooms').value = '';
             document.getElementById('prod-sqmeters').value = '';
-            document.getElementById('prod-image-file').value = '';
-            document.getElementById('prod-image-url').value = '';
+            document.getElementById('prod-image-file').value = ''; document.getElementById('prod-image-url').value = '';
             document.getElementById('prod-image-preview').style.display = 'none';
+            document.getElementById('prod-gallery-files').value = ''; document.getElementById('gallery-preview').innerHTML = '';
             document.getElementById('btn-save-product').textContent = 'Guardar Propiedad';
             document.getElementById('btn-cancel-edit').style.display = 'none';
         }
 
         async function deleteProduct(id) {
-            if (confirm('¿Eliminar esta propiedad permanentemente?')) {
-                await db.collection('productos').doc(id).delete();
-            }
+            if (confirm('¿Eliminar esta propiedad permanentemente?')) await db.collection('productos').doc(id).delete();
         }
     </script>
-    
-    <button id="install-btn-admin" style="display: none; position: fixed; bottom: 20px; right: 20px; background: #2c3e50; color: white; border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 9999; font-family: 'Poppins', sans-serif;">
-        📲 Instalar Panel
-    </button>
-
+    <button id="install-btn-admin" style="display: none; position: fixed; bottom: 20px; right: 20px; background: #2c3e50; color: white; border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 9999; font-family: 'Poppins', sans-serif;">📲 Instalar Panel</button>
     <script>
-        let deferredPromptAdmin;
-        const installBtnAdmin = document.getElementById('install-btn-admin');
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPromptAdmin = e;
-            installBtnAdmin.style.display = 'block';
-        });
+        let deferredPromptAdmin; const installBtnAdmin = document.getElementById('install-btn-admin');
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPromptAdmin = e; installBtnAdmin.style.display = 'block'; });
         installBtnAdmin.addEventListener('click', async () => {
-            if (deferredPromptAdmin) {
-                deferredPromptAdmin.prompt();
-                const { outcome } = await deferredPromptAdmin.userChoice;
-                if (outcome === 'accepted') installBtnAdmin.style.display = 'none';
-                deferredPromptAdmin = null;
-            }
+            if (deferredPromptAdmin) { deferredPromptAdmin.prompt(); const { outcome } = await deferredPromptAdmin.userChoice; if (outcome === 'accepted') installBtnAdmin.style.display = 'none'; deferredPromptAdmin = null; }
         });
     </script>
 </body>
